@@ -3,13 +3,13 @@
 module Parser where
 
 import Control.Applicative (Alternative, empty, some, (<|>), many)
-import qualified Lexer
+import Lexer
+import Data.Bifunctor (first)
 
-newtype Var = MkVar Char deriving (Show, Eq)
 
 data Op = Or Expr Expr | And Expr Expr | Xor Expr Expr deriving (Show, Eq)
 
-data Expr = Var | Op | In Var Var | Not Expr deriving (Show, Eq)
+data Expr = Var Char | Op | In Expr Expr | Not Expr deriving (Show, Eq)
 
 -- parser instances
 
@@ -49,15 +49,11 @@ satisfy predicate = Parser $ \case
 element :: Eq s => s -> Parser s s
 element e = satisfy (== e)
 
---exprParser :: Parser Char Expr
---parse input = orParser $ tokenize input
-
 varParser :: Parser Token Expr
 varParser =
   Parser $ \case
-    (Lexer.Var name:rest) -> Just (Var name, rest)
+    (Lexer.Var name:rest) -> Just (Parser.Var name, rest)
     _ -> Nothing
 
 inParser :: Parser Token Expr
-inParser = element Lexer.In *> varParser
-
+inParser = Parser.In <$> varParser <*> (element Lexer.In *> varParser)
