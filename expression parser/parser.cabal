@@ -1,0 +1,64 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: ec92a8eedb20482201089a88fac934cedaf53db3b387e4f0d9365fb4beebb2e4
+
+name:           parser
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/Github username here/parser#readme>
+homepage:       https://github.com/Github username here/parser#readme
+bug-reports:    https://github.com/Github username here/parser/issues
+author:         Author name here
+maintainer:     Author email here
+copyright:      2019 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/Github username here/parser
+
+library
+  exposed-modules:
+      Lexer
+      Lib
+  other-modules:
+      Paths_parser
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+  default-language: Haskell2010
+
+executable parser-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_parser
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , parser
+    ,
+  default-language: Haskell2010
+
+test-suite parser-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_parser
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , parser
+  default-language: Haskell2010
