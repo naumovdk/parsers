@@ -1,6 +1,8 @@
 module Main where
 
-import Lib
+import ExpressionParser
 
 main :: IO ()
-main = someFunc
+main = do
+  input <- getLine
+  putStr $ maybe "No parse" show (parse input)

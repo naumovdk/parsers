@@ -40,7 +40,9 @@ packages:
 # - git: https://github.com/commercialhaskell/stack.git
 #   commit: e7b331f14bcffb8367cd58fbfc8b40ec7642100a
 #
-# extra-deps: []
+#extra-deps:
+#- terminfo-0.4.1.4@sha256:64489de75cd4a4a6b427bb870b66274922c851570642e0fd242d320dcb67322b,1658
+
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
