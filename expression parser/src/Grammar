@@ -1,0 +1,8 @@
+EXPR := OR
+OR := XOR `or` OR | XOR
+XOR := AND `xor` XOR | AND
+AND := NOT `and` AND | NOT
+NOT := `not` NOT | IN
+IN := VAR `in` IN | VAR `not` `in` IN | VAR
+VAR := `var` | `(` S `)`
+chain in?

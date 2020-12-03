@@ -17,12 +17,15 @@ varP =
   Parser $ \case
     (L.Var name : rest) -> Just (Var name, rest)
     _ -> Nothing
+    
+argP :: Parser L.Token Expr
+argP = varP <|> (element L.Lparen *> orP <* element L.Rparen) 
 
 inP :: Parser L.Token Expr
-inP = In <$> varP <*> (element L.In *> varP) <|> varP
+inP = In <$> varP <*> (element L.In *> varP) <|> argP
 
 notP :: Parser L.Token Expr
-notP = Not <$> (element L.Not *> inP <|> In <$> varP <*> (element L.Not *> (element L.In *> varP))) <|> inP
+notP = Not <$> (element L.Not *> notP <|> In <$> varP <*> (element L.Not *> (element L.In *> varP))) <|> inP
 
 andP :: Parser L.Token Expr
 andP = And <$> notP <*> (element L.And *> andP) <|> notP

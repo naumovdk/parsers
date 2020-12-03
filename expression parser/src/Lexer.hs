@@ -30,5 +30,12 @@ token =
     [c] -> Just $ Var c
     _ -> Nothing
 
+--split :: String -> [String]
+--split ('(':c) = ["(", c]
+--split (c:[')']) = [c, ")"]
+
+--separateParens :: [String] -> [String]
+--separateParens input = map
+
 tokenize :: String -> Maybe [Token]
 tokenize input = traverse token (words input)
