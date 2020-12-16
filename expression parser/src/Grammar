@@ -1,8 +1,9 @@
 EXPR := OR
-OR := XOR `or` OR | XOR
+OR := XOR OR'
+OR' := `or` OR' | eps
 XOR := AND `xor` XOR | AND
 AND := NOT `and` AND | NOT
 NOT := `not` NOT | IN
-IN := VAR `in` IN | VAR `not` `in` IN | VAR
+IN := VAR IN'
+IN' := `in` IN' | `not` `in` IN' | eps
 VAR := `var` | `(` S `)`
-chain in?

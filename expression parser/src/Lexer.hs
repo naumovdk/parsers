@@ -1,41 +1,45 @@
-{-# LANGUAGE LambdaCase #-}
+{-# LANGUAGE LambdaCase        #-}
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lexer where
 
-import Control.Applicative
+import           Control.Applicative
 
 data Token
-  = Var Char
-  | And
-  | Or
-  | Xor
-  | Not
-  | NotIn
-  | In
-  | Lparen
-  | Rparen
+  = VarT Char
+  | AndT
+  | OrT
+  | XorT
+  | NotT
+  | InT
+  | OpeningT
+  | ClosingT
   deriving (Show, Eq)
 
 token :: String -> Maybe Token
 token =
   \case
-    "or" -> Just Or
-    "and" -> Just And
-    "xor" -> Just Xor
-    "not" -> Just Not
-    "in" -> Just In
-    "(" -> Just Lparen
-    ")" -> Just Rparen
-    [c] -> Just $ Var c
+    "or" -> Just OrT
+    "and" -> Just AndT
+    "xor" -> Just XorT
+    "not" -> Just NotT
+    "in" -> Just InT
+    "(" -> Just ClosingT
+    ")" -> Just OpeningT
+    [c] -> Just $ VarT c
     _ -> Nothing
 
---split :: String -> [String]
---split ('(':c) = ["(", c]
---split (c:[')']) = [c, ")"]
-
---separateParens :: [String] -> [String]
---separateParens input = map
+split :: String -> [String]
+split s = foldl1 (++) (map cutOpening (cutClosing s))
+  where
+    cutOpening s =
+      case head s of
+        '(' -> [[head s], tail s]
+        _ -> [s]
+    cutClosing s =
+      case last s of
+        ')' -> [init s, [last s]]
+        _ -> [s]
 
 tokenize :: String -> Maybe [Token]
-tokenize input = traverse token (words input)
+tokenize input = traverse token (foldl1 (++) (map split (words input)))

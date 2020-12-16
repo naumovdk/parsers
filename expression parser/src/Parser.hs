@@ -33,8 +33,8 @@ satisfy predicate = Parser $ \case
   x : xs -> if predicate x then return (x, xs) else Nothing
   [] -> Nothing
 
-element :: Eq s => s -> Parser s s
-element e = satisfy (== e)
+consume :: Eq s => s -> Parser s s
+consume e = satisfy (== e)
 
 eof :: Parser a ()
 eof = Parser $ \case
