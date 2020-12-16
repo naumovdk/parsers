@@ -1,9 +1,25 @@
 EXPR := OR
-OR := XOR OR'
+OR := XOR OR' | XOR
 OR' := `or` OR' | eps
-XOR := AND `xor` XOR | AND
-AND := NOT `and` AND | NOT
+XOR := AND `xor` XOR' | AND
+XOR' := `xor` AND | eps
+AND := NOT `and` AND' | NOT
+AND' := `and` NOT | eps
 NOT := `not` NOT | IN
 IN := VAR IN'
 IN' := `in` IN' | `not` `in` IN' | eps
-VAR := `var` | `(` S `)`
+VAR := `var` | `(` EXPR `)`
+
+EXPR := OR
+OR := XOR OR' | XOR
+OR' := `or` OR' | eps
+XOR := AND `xor` XOR' | AND
+XOR' := `xor` AND | eps
+AND := NOT `and` AND' | NOT
+AND' := `and` NOT | eps
+NOT := `not` WRAPPED | IN
+IN := VAR IN'
+IN' := `in` IN' | `not` `in` IN' | eps
+VAR := `var` | WRAPPED
+WRAPPED := `(` EXPR `)`
+

@@ -28,14 +28,15 @@ source-repository head
 library
   exposed-modules:
       ExpressionParser
+      Lexer
   other-modules:
       Paths_parser
       Parser
-      Lexer
   hs-source-dirs:
       src
   build-depends:
       base >=4.7 && <5
+    , split
   default-language: Haskell2010
 
 executable parser-exe
@@ -48,6 +49,7 @@ executable parser-exe
   build-depends:
       base >=4.7 && <5
     , parser
+    , split
   default-language: Haskell2010
 
 test-suite parser-test
@@ -61,4 +63,6 @@ test-suite parser-test
   build-depends:
       base >=4.7 && <5
     , parser
+    , hspec
+    , QuickCheck
   default-language: Haskell2010

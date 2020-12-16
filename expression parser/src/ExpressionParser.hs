@@ -14,7 +14,7 @@ data Expr
   | And Expr Expr
   | Xor Expr Expr
   | In Expr Expr
-  | Not Expr
+  | Not Expr deriving Eq
 
 parse :: String -> Maybe Expr
 parse input = runParse =<< tokenize input
@@ -25,8 +25,11 @@ varP =
     (VarT name:rest) -> Just (Var name, rest)
     _ -> Nothing
 
+wrappedP :: Parser Token Expr
+wrappedP = consume OpeningT *> orP <* consume ClosingT
+
 argP :: Parser Token Expr
-argP = varP <|> (consume OpeningT *> orP <* consume ClosingT)
+argP = varP <|> wrappedP
 
 inP :: Parser Token Expr
 inP = do
@@ -49,12 +52,8 @@ in'P acc a = do
     [] -> [a] 
     _ -> acc
 
-f x = Just $ case x of
-  [] -> [1]
-  _ -> x 
-
 notP :: Parser Token Expr
-notP = Not <$> (consume NotT *> inP) <|> inP
+notP = Not <$> (consume NotT *> wrappedP) <|> inP
 
 andP :: Parser Token Expr
 andP = foldl1 And <$> liftA2 (:) notP and'P <|> notP

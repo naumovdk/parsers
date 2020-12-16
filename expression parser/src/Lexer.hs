@@ -4,6 +4,8 @@
 module Lexer where
 
 import           Control.Applicative
+import Text.Read (readMaybe)
+--import Data.List.Split
 
 data Token
   = VarT Char
@@ -24,8 +26,8 @@ token =
     "xor" -> Just XorT
     "not" -> Just NotT
     "in" -> Just InT
-    "(" -> Just ClosingT
-    ")" -> Just OpeningT
+    "(" -> Just OpeningT
+    ")" -> Just ClosingT
     [c] -> Just $ VarT c
     _ -> Nothing
 

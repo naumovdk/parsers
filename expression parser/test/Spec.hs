@@ -1,24 +1,25 @@
+import ExpressionParser
+import Lexer
 import Test.Hspec
 import Test.QuickCheck
-import ExpressionParser
 
 a = Var 'a'
 b = Var 'b'
+c = Var 'c'
 z = Var 'z'
 
 main :: IO ()
-main =
-  hspec $
+main = hspec $ do
   describe "Parser tests" $ do
     it "empty input" $
-      parse "" `shouldBe` Just ""
-    it "non letter variable name" $
+      runParse [] `shouldBe` Nothing
+    it "non letter name" $
       parse "aa" `shouldBe` Nothing
-    it "a in b in c" $
-      parse "a in b in c" `shouldBe` Just $ And (In a b ) (In b c)
-    it "not in" $
-      parse "a not in b" `shouldBe` Just $ Not (In (Var 'a') (Var 'b'))
-    it "not not not" $
-      parse "not not not a not in b" `shouldBe` Just $ Not $ Not $ Not $ Not $ In a b
-    it "parantheses" $
-      parse "(a in b or b in a) and a in (z)" `shouldBe` Just $ And (Or (In a b) (In b a)) (In a z)
+    it "a in b in c" $ do
+      runParse [VarT 'a', InT, VarT 'b', InT, VarT 'c'] `shouldBe` Just (And (In a b) (In b c))
+    it "not in" $ do
+      runParse [VarT 'a', NotT, InT, VarT 'b'] `shouldBe` Just (Not (In (Var 'a') (Var 'b')))
+    it "not not not" $ do
+      runParse [NotT, NotT, NotT, VarT 'a', NotT, InT, VarT 'b'] `shouldBe` Just (Not $ Not $ Not $ Not $ In a b)
+    it "complex test with parantheses" $ do
+      runParse [OpeningT, VarT 'a', InT, VarT 'b', OrT, VarT 'b', InT, VarT 'a', ClosingT, AndT, OpeningT, VarT 'z', ClosingT] `shouldBe` Just (And (Or (In a b) (In b a)) z)
