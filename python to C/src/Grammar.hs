@@ -9,9 +9,9 @@ data Statement
   | Variable String
   | Assignment Statement Statement
   | Equality Statement Statement
-  | IfElse Statement Statement Statement
+  | IfElse Statement [Statement] (Maybe [Statement])
   | PyInt String
-  | PyString String
+  | PyString String deriving Show
 
 --data PyType = IntT | StringT | BoolT | PyNone
 

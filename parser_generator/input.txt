@@ -1,4 +1,15 @@
 skip "[ ]+"
-var "[a-z]+"
 int "[0-9]+"
-minus "-"
+prod "[*]"
+plus "[+]"
+open "("
+clos ")"
+
+E = T E'
+E' = plus T E'
+E' = eps
+T = F T'
+T' = eps
+T' = prod F T'
+F = int
+F = open E clos

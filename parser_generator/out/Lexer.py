@@ -1,8 +1,11 @@
 import re
+from collections import namedtuple
+from enum import Enum
 
-rules = {'skip': '[ ]+', 'var': '[a-z]+', 'int': '[0-9]+', 'minus': '-'}
+rules = {'skip': '[ ]+', 'int': '[0-9]+', 'prod': '[*]', 'plus': '[+]', 'open': '('}
 rules = {name: re.compile(rules[name]) for name in rules}
 
+Token = namedtuple('Token', 'type value')
 
 def matches_any(substring):
     for rule in rules.values():
@@ -25,9 +28,10 @@ def tokenize(input):
         cur = input[l:r]
         nxt = input[l:r + 1]
         if matches_any(cur) and not matches_any(nxt) or r >= len(input):
-            res.append((cur, match_first(cur)))
+            t = Token(cur, match_first(cur))
+            res.append(t)
             l = r
         else:
             r += 1
-    res = list(filter(lambda rule: rule[1] != 'skip', res))
+    res = list(filter(lambda token: token.type != 'skip', res))
     return res

@@ -1,4 +1,4 @@
-grammar Grammar;
+grammar Input;
 
 @parser::members {
     self.lexer_tokens = []
@@ -8,7 +8,7 @@ grammar Grammar;
 parse: stat+ ;
 stat 
     : token
-    // | rule
+    | rule_
     ;
 
 TAB
@@ -18,10 +18,14 @@ TAB
 NL: '\n';
 EMPTY: NL NL;
 WS: [ \t]+ -> skip;
-ID: [a-zA-Z]+;
-REGEX: '"' ~[\n]+ '"'; 
+ID: [a-zA-Z']+;
+REGEX: '"' ~[\n]+ '"';
 
 token: ID REGEX NL {
 self.lexer_tokens.append(($ID.text, $REGEX.text))
 };
 
+rule_: ID '=' ID* {
+id = $ID
+self.parser_tokens.append(id)
+};

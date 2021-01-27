@@ -7,21 +7,27 @@ module Lexer where
 $digit = 0-9
 $alpha = [a-zA-Z]
 $quote = [\'\"]
+$tab = [\t]
 
 tokens :-
 
-  \n                        { \_ -> NewLineT }
-  $white                     ;
+  \n                          { \_ -> NewLineT }
+  \t                          { \_ -> TabT }
+  "    "                      { \_ -> TabT }
+  $white                      ;
   "("                         { \_ -> OpeningT }
   ")"                         { \_ -> ClosingT }
+  "=="                        { \_ -> EqT }
   "="                         { \_ -> AssignT }
   "+"                         { \_ -> PlusT }
   "int"                       { \_ -> IntT }
   "input"                     { \_ -> InputT }
   $quote [$alpha $digit]* $quote      { \s -> RawStrT s }
-  $alpha [$alpha $digit]*     { \s -> VarT s }
   $digit+                     { \s -> NumberT s }
-
+  "if"                        { \_ -> IfT }
+  "else"                      { \_ -> ElseT }
+  ":"                         { \_ -> ColonT }
+  $alpha [$alpha $digit]*     { \s -> VarT s }
 {
 
 data Token = OpeningT
@@ -35,5 +41,10 @@ data Token = OpeningT
            | InputT
            | NumberT String
            | NewLineT
+           | IfT
+           | ElseT
+           | ColonT
+           | TabT
+           | EqT
            deriving (Show, Eq)
 }
