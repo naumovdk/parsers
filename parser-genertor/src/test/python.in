@@ -1,0 +1,30 @@
+tokens
+    in : "in"
+    var : "[a-z]"
+    not : "not"
+    and : "and"
+    or : "or"
+    openParen : "[(]"
+    closeParen : "[)]"
+    skip : "[ ]+"
+rules
+    main
+        OR { res["v"] = res["children"][0]["v"] }
+    OR
+        AND ORR(res["children"][0]["v"]) { res["v"] = res["children"][1]["v"] }
+    ORR(self, fst)  { res["v"] = fst }
+        or AND ORR(['or',fst,res["children"][0]["v"]]) { res["v"] = res["children"][1]["v"] }
+        eps { res["v"] = fst }
+    AND
+        IN ANDD(res["children"][0]["v"]) { res["v"] = res["children"][1]["v"] }
+    ANDD(self, fst)  { res["v"] = fst }
+        and IN ANDD('and',fst,res["children"][0]["v"]) { res["v"] = res["children"][1]["v"] }
+        eps { res["v"] = fst }
+    IN
+        VAR INN(res["children"][0]["v"]) { res["v"] = res["children"][1]["v"] }
+    INN(self, fst)  { res["v"] = fst }
+        in VAR { res["v"] = ["in", fst, res["children"][0]["v"]] }
+        eps { res["v"] = fst }
+    VAR
+        var { res["v"] = self.token.value }
+        openParen OR closeParen { res["v"] = res["children"][1]["v"] }

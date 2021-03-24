@@ -1,0 +1,10 @@
+tokens
+    a : "a"
+rules
+    main
+        A
+    A
+        A B
+        a
+    B
+        a

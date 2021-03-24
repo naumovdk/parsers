@@ -1,0 +1,25 @@
+tokens
+    plus : "[+]"
+    minus : "[-]"
+    mul : "[*]"
+    div : "[/]"
+    number : "[0-9]+"
+    openParen : "[(]"
+    closeParen : "[)]"
+    skip : "[ ]+"
+rules
+    main { res["acc"] = 0 }
+        E { res["acc"] = res["children"][0]["acc"] }
+    E { res["acc"] = 0 }
+        T EE(res["children"][0]["acc"]) { res["acc"] = res["children"][1]["acc"] }
+    EE(self, acc) { res["acc"] = acc }
+        plus T EE(acc + res["children"][0]["acc"]) { res["acc"] = res["children"][1]["acc"] }
+        eps
+    T { res["acc"] = 0 }
+        F TT(res["children"][0]["acc"]) { res["acc"] = res["children"][1]["acc"] }
+    TT(self, acc) { res["acc"] = acc }
+        mul F TT(acc * res["children"][0]["acc"]) { res["acc"] = res["children"][1]["acc"] }
+        eps
+    F { res["acc"] = 0 }
+        number { res["acc"] = int(self.token.value) }
+        openParen E { res["acc"] = res["children"][0]["acc"] } closeParen

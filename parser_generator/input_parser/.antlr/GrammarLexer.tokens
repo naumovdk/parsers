@@ -1,7 +1,0 @@
-TAB=1
-NL=2
-EMPTY=3
-WS=4
-ID=5
-REGEX=6
-'\n'=2
